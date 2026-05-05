@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Stride — Accessible Rides</title>
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+  <!-- App styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- SPLASH: full-screen -->
+    <div id="splash" class="screen splash-screen" role="dialog" aria-modal="true" aria-label="Stride Splash">
+      <div class="splash-card">
+        <div class="stride-logo">
+          <img src="WhatsApp Image 2025-12-02 at 14.40.09_bec1e040.jpg" alt="Stride logo" />
+        </div>
+
+        <h1 class="splash-title">STRIDE</h1>
+        <p class="splash-sub">Find accessible rides easily.</p>
+
+        <div class="splash-actions">
+          <button id="btnStartPassenger" class="btn primary large">I am a Passenger</button>
+          <button id="btnStartDriver" class="btn ghost large">I am a Driver</button>
+        </div>
+
+        <div class="splash-footer" style="margin-top:16px">
+          <!-- btnToLogin acts as Sign In now -->
+          <button id="btnToLogin" class="btn ghost">Sign In</button>
+          <button id="btnToSignup" class="btn ghost">Sign Up</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AUTH (login/signup modal) -->
+    <div id="authModal" class="modal" aria-hidden="true">
+      <div class="modal-card">
+        <h2 id="authTitle">Sign In</h2>
+
+        <div id="authFormLogin">
+          <label>Email</label>
+          <input id="authEmail" type="email" placeholder="you@example.com" />
+          <label>Password</label>
+          <input id="authPass" type="password" placeholder="Password" />
+          <div class="row space-between" style="margin-top:12px">
+            <button id="authSubmit" class="btn primary">Sign In</button>
+            <button id="authCancel" class="btn ghost">Cancel</button>
+          </div>
+          <div class="small muted" style="margin-top:10px">No account? <button id="openSignup" class="link">Create one</button></div>
+        </div>
+
+        <div id="authFormSignup" style="display:none">
+          <label>First Name</label>
+          <input id="signupFirst" type="text" placeholder="First name" />
+          <label>Last Name</label>
+          <input id="signupLast" type="text" placeholder="Last name" />
+          <label>Email</label>
+          <input id="signupEmail" type="email" placeholder="you@example.com" />
+          <label>Password</label>
+          <input id="signupPass" type="password" placeholder="Password" />
+          <label>Confirm Password</label>
+          <input id="signupPass2" type="password" placeholder="Confirm password" />
+          <div class="row space-between" style="margin-top:12px">
+            <button id="doSignup" class="btn primary">Create</button>
+            <button id="cancelSignup" class="btn ghost">Cancel</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div class="main">
+
+      <!-- Topbar with back + optional logout (no profile button) -->
+      <header class="topbar">
+        <div class="top-left">
+          <button id="btnBackTop" class="btn ghost small" style="display:none">Back</button>
+          <div class="logo-mini" aria-hidden="true">
+            <svg viewBox="0 0 40 40" width="28" height="28"><circle cx="20" cy="20" r="18" fill="#14b9a0"/><path d="M13 20c3-5 10-5 12 0" stroke="#07323a" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+          </div>
+          <div id="roleBadge" class="role-badge">Passenger</div>
+        </div>
+
+        <div class="top-right">
+          <button id="logout" class="btn ghost small" style="display:none">Logout</button>
+        </div>
+      </header>
+
+      <!-- HOME / SEARCH (pickup & destination fields above map) -->
+      <section id="homePage" class="page active">
+        <div class="floating-panel">
+          <label>Pickup</label>
+          <input id="pickupInput" placeholder="Enter pickup location (or use My Location)" aria-label="Pickup" />
+          <label style="margin-top:8px">Where to?</label>
+          <input id="destinationInput" placeholder="Enter destination (e.g., Central Library)" aria-label="Destination" />
+          <div class="row" style="margin-top:8px">
+            <button id="btnSearch" class="btn primary">Search Rides</button>
+            <button id="btnMyLocation" class="btn ghost">Use My Location</button>
+          </div>
+        </div>
+
+        <div class="map-wrap" id="homeMapWrap" aria-hidden="true">
+          <div id="map"></div>
+        </div>
+      </section>
+
+      <!-- VEHICLE SELECTION -->
+      <section id="vehiclePage" class="page">
+        <div class="page-inner">
+          <div class="row space-between" style="align-items:center">
+            <h2>Select a ride</h2>
+            <button id="btnBackFromVehicle" class="btn ghost">Back</button>
+          </div>
+          <p class="muted">Choose the vehicle that suits your needs.</p>
+
+          <div class="vehicle-list"></div>
+
+          <div class="row space-between" style="margin-top:18px">
+            <button id="btnBackToHome" class="btn ghost">Back</button>
+            <button id="btnProceedBooking" class="btn primary" disabled>Proceed</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- BOOKING SUMMARY -->
+      <section id="bookingPage" class="page">
+        <div class="page-inner">
+          <div class="row space-between" style="align-items:center">
+            <h2>Booking Summary</h2>
+            <button id="btnBackFromBooking" class="btn ghost">Back</button>
+          </div>
+
+          <div id="summaryCard" class="card"></div>
+
+          <div class="payment-row" style="margin-top:12px">
+            <label>Payment</label>
+            <div class="row" style="gap:6px;margin-top:6px">
+              <button class="btn payment-option" data-method="cash">Cash</button>
+              <button class="btn payment-option" data-method="card">Card</button>
+              <button class="btn payment-option" data-method="mpesa">M-Pesa</button>
+            </div>
+          </div>
+
+          <div class="row space-between" style="margin-top:18px">
+            <button id="btnBackToVehicle" class="btn ghost">Back</button>
+            <button id="btnConfirmBooking" class="btn primary">Confirm Booking</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIDE ACTIVE -->
+      <section id="rideActivePage" class="page">
+        <div class="map-wrap" id="rideMapWrap">
+          <div id="rideMap" style="height:60vh"></div>
+        </div>
+
+        <div class="page-inner">
+          <div id="driverCard" class="card driver-card overlay-driver"></div>
+
+          <div class="row space-between" style="margin-top:12px">
+            <button id="btnCancelRide" class="btn ghost">Cancel Ride</button>
+            <button id="btnCompleteRide" class="btn primary">Mark Complete</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACTIVITY -->
+      <section id="activityPage" class="page">
+        <div class="page-inner">
+          <div class="row space-between" style="align-items:center">
+            <h2>Activity</h2>
+            <button id="btnBackFromActivity" class="btn ghost" style="display:none">Back</button>
+          </div>
+          <p class="muted">Your past rides</p>
+          <ul id="activityList" class="list"></ul>
+        </div>
+      </section>
+
+      <!-- PROFILE -->
+      <section id="profilePage" class="page">
+        <div class="page-inner">
+          <div class="row space-between" style="align-items:center">
+            <h2>Profile</h2>
+            <button id="btnBackFromProfile" class="btn ghost">Back</button>
+          </div>
+
+          <div class="card">
+            <label>First Name</label>
+            <input id="profileFirst" />
+            <label>Last Name</label>
+            <input id="profileLast" />
+            <label>Email</label>
+            <input id="profileEmail" />
+            <label>Phone</label>
+            <input id="profilePhone" />
+            <div class="row space-between" style="margin-top:12px">
+              <button id="btnSaveProfile" class="btn primary">Save</button>
+              <button id="btnLogoutProfile" class="btn ghost">Logout</button>
+            </div>
+          </div>
+
+          <h3 style="margin-top:18px">Payment</h3>
+          <div class="card">
+            <label>Saved Card</label>
+            <input id="cardNumber" placeholder="4242 4242 4242 4242" />
+            <button id="btnSaveCard" class="btn ghost" style="margin-top:8px">Save Card</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- DRIVER DASHBOARD -->
+      <section id="driverDashboard" class="page">
+        <div class="page-inner">
+          <div class="row space-between" style="align-items:center">
+            <h2>Driver Dashboard</h2>
+            <button id="btnBackFromDriver" class="btn ghost">Back</button>
+          </div>
+
+          <div id="incomingRequest" class="card">
+            <div style="font-weight:700">Incoming Ride Request</div>
+            <div id="reqDetails" class="small muted" style="margin-top:6px"></div>
+            <div class="row" style="margin-top:12px">
+              <button id="btnAccept" class="btn primary">Accept</button>
+              <button id="btnDecline" class="btn ghost">Decline</button>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div style="font-weight:700">Quick Tips: Helping passengers in wheelchairs</div>
+            <ul style="margin-top:8px" class="small muted">
+              <li>Approach slowly and communicate what you will do.</li>
+              <li>Secure the wheelchair safely — use straps if available.</li>
+              <li>Offer gentle assistance while asking permission first.</li>
+              <li>Be patient and confirm the passenger's preference for boarding.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom nav -->
+      <nav id="bottomNav" class="bottom-nav">
+        <button id="navHome" class="nav-btn active">Home</button>
+        <button id="navActivity" class="nav-btn">Activity</button>
+        <button id="navProfile" class="nav-btn">Profile</button>
+      </nav>
+    </div> <!-- /main -->
+
+  </div> <!-- /app -->
+
+  <!-- Leaflet script -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- App logic -->
+  <script src="app.js"></script>
+</body>
+</html>

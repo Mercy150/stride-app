@@ -1,0 +1,346 @@
+/* ---------------------------------------------------
+   STRIDE - Accessible Navigation App
+   Updated style.css (splash + map below inputs + selection visuals)
+   --------------------------------------------------- */
+
+/* CSS RESET */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ROOT VARIABLES */
+:root {
+  --bg: #072f30;
+  --teal: #14b9a0;
+  --teal-2: #0fa89c;
+  --card: #0f3f46;
+  --muted: #9fb8bb;
+  --white: #ffffff;
+  --glass: rgba(255,255,255,0.04);
+  --round: 12px;
+  --shadow: 0 6px 18px rgba(5,20,25,0.45);
+  --max-width: 480px;
+
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-size: 16px;
+}
+
+/* GLOBAL LAYOUT */
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--white);
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 80px;
+}
+
+/* ---------------------------------------------------
+   SPLASH SCREEN
+----------------------------------------------------- */
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 9999;
+  background: linear-gradient(180deg, #043435ee, #001a1bcc);
+}
+
+.splash-card {
+  width: 100%;
+  max-width: 520px;
+  background: linear-gradient(180deg, #043b3c, #03292a);
+  border-radius: 18px;
+  padding: 32px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.stride-logo {
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 14px;
+  border-radius: 18px;
+  overflow: hidden;
+}
+.stride-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* splash title uppercase and bolder */
+.splash-title {
+  font-size: 36px;
+  margin: 10px 0;
+  color: var(--white);
+  letter-spacing: 2px;
+  font-weight: 800;
+}
+
+.splash-sub {
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+
+.splash-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* BUTTONS */
+.btn {
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.18s ease;
+}
+
+.btn.small { padding:6px 10px; font-size:0.9rem; }
+.btn.large { padding:12px 16px; font-size:16px; }
+
+.btn.primary {
+  background: linear-gradient(90deg, var(--teal), var(--teal-2));
+  color: var(--bg);
+  box-shadow: 0 6px 14px rgba(20,185,160,0.12);
+}
+.btn.ghost {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--white);
+}
+.btn.ghost:hover, .btn.primary:hover { transform: translateY(-2px); }
+
+/* ---------------------------------------------------
+   TOP BAR
+----------------------------------------------------- */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: transparent;
+}
+
+.logo-mini svg {
+  width: 36px;
+  height: 36px;
+}
+
+.role-badge {
+  background: var(--card);
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------
+   MAP + FLOATING PANEL (now panel above map)
+----------------------------------------------------- */
+.floating-panel {
+  position: relative;
+  margin: 12px;
+  background: var(--card);
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  z-index: 20;
+}
+
+.floating-panel input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255,255,255,0.02);
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.map-wrap {
+  position: relative;
+  height: 50vh;
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 12px;
+  background: linear-gradient(180deg, #031918, #042a2b);
+  display: none; /* hidden while splash active; shown after login */
+}
+
+/* ensure map fills area */
+#map, #rideMap {
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------------------------------------------------
+   PAGES
+----------------------------------------------------- */
+.page {
+  display: none;
+  padding-bottom: 12px;
+}
+
+.page.active { display: block; }
+
+.page-inner { padding: 8px 12px; }
+
+/* ---------------------------------------------------
+   CARDS / LISTS
+----------------------------------------------------- */
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  padding: 12px;
+  border-radius: 12px;
+  margin: 10px 0;
+}
+
+/* VEHICLE SELECTION - improved selected / expand effect */
+.vehicle-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.vehicle-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--card);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.02);
+}
+
+.vehicle-item:hover { transform: translateY(-4px); }
+
+.vehicle-item .vehicle-thumb {
+  width: 84px;
+  height: 56px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #0fa89c, #14b9a0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--bg);
+}
+
+/* selected = visually expanded with extra detail visible */
+.vehicle-item.selected {
+  transform: scale(1.02);
+  border: 2px solid rgba(20,185,160,0.18);
+  padding: 16px;
+  background: linear-gradient(180deg, rgba(20,185,160,0.06), rgba(255,255,255,0.01));
+}
+
+/* small details inside */
+.vehicle-item .muted { color: var(--muted); font-size:0.9rem; }
+
+/* ---------------------------------------------------
+   DRIVER CARD / AVATAR
+----------------------------------------------------- */
+.driver-card { display:flex; gap:12px; align-items:center; }
+.avatar { width:64px; height:64px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--bg); background:linear-gradient(90deg,#14b9a0,#0fa89c); }
+.driver-info { flex:1; }
+
+/* ---------------------------------------------------
+   BOTTOM NAV
+----------------------------------------------------- */
+.bottom-nav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 8px;
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 12px;
+  gap: 8px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  z-index: 999;
+}
+
+.nav-btn {
+  background: var(--card);
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.nav-btn.active { background: linear-gradient(90deg,var(--teal),var(--teal-2)); color:var(--bg); }
+
+/* ---------------------------------------------------
+   PAYMENT OPTIONS - nicer selectable chips
+----------------------------------------------------- */
+.payment-row .payment-option {
+  border-radius: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+  cursor: pointer;
+  transition: 0.12s;
+  font-weight:700;
+}
+
+.payment-row .payment-option.active {
+  background: linear-gradient(90deg,var(--teal),var(--teal-2));
+  color: var(--bg);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(20,185,160,0.12);
+}
+
+/* ---------------------------------------------------
+   MODALS + UTILITIES
+----------------------------------------------------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.6);
+  z-index: 10000;
+}
+
+.modal-card {
+  background: linear-gradient(180deg,#072f30,#043435);
+  padding: 16px;
+  border-radius: 12px;
+  min-width: 300px;
+}
+
+label { display:block; margin-top:8px; color:var(--muted); }
+input, select { width:100%; padding:10px; border-radius:8px; border:none; background:rgba(255,255,255,0.02); color:var(--white); }
+
+/* small utilities */
+.row { display:flex; gap:8px; }
+.space-between { justify-content:space-between; }
+.muted { color:var(--muted); }
+.small { font-size:0.85rem; color:var(--muted); }
+.link { background:none; border:none; color:var(--teal); cursor:pointer; padding:0; }
+.footer { padding:12px; text-align:center; color:var(--muted); }
